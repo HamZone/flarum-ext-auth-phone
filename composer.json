@@ -1,0 +1,37 @@
+{
+  "name": "hamzone/flarum-ext-auth-phone",
+  "description": "auth by phone sms once code",
+  "keywords": [
+    "flarum"
+  ],
+  "type": "flarum-extension",
+  "license": "Apache-2.0",
+  "require": {
+    "flarum/core": "^0.1.0-beta.8"
+  },
+  "authors": [
+    {
+      "name": "Emin.lin(BG5UWQ)",
+      "email": "Emin.lin@live.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "HamZone\\AuthPhone\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Flarum-ext-auth-phone",
+      "icon": {
+        "name": "",
+        "backgroundColor": "",
+        "color": ""
+      }
+    },
+    "flagrow": {
+      "discuss": ""
+    }
+  }
+}
