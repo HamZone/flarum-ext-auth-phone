@@ -7,11 +7,11 @@
   "type": "flarum-extension",
   "license": "Apache-2.0",
   "require": {
-    "flarum/core": "^0.1.0-beta.8"
+    "flarum/core": "^1.0.0"
   },
   "authors": [
     {
-      "name": "Emin.lin(BG5UWQ)",
+      "name": "Emin.lin",
       "email": "Emin.lin@live.com",
       "role": "Developer"
     }
