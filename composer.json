@@ -23,11 +23,11 @@
   },
   "extra": {
     "flarum-extension": {
-      "title": "Flarum-ext-auth-phone",
+      "title": "Auth Phone",
       "icon": {
-        "name": "",
-        "backgroundColor": "",
-        "color": ""
+        "name": "fas fa-id-badge",
+        "backgroundColor": "#e74c3c",
+        "color": "#fff"
       }
     },
     "flagrow": {

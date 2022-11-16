@@ -21,3 +21,9 @@ composer update hamzone/flarum-ext-auth-phone
 ### Links
 
 - [Packagist](https://packagist.org/packages/hamzone/flarum-ext-auth-phone)
+
+```
+ "require-dev": {
+        "hamzone/flarum-ext-auth-phone":"@dev"
+    }
+```
