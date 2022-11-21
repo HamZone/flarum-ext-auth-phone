@@ -1,8 +1,6 @@
+import app from 'flarum/app';
 import SettingsPage from './components/SettingsPage';
 
-app.initializers.add('hamzone/flarum-ext-auth-phone', () => {
-  console.log('[hamzone/flarum-ext-auth-phone] Hello, admin!');
-
-  //注入
-  app.extensionData.for(config.module.name).registerPage(SettingsPage);
+app.initializers.add('hamzone/hamzone-auth-phone', () => {
+  app.extensionData.for("hamzone-auth-phone").registerPage(SettingsPage);
 });

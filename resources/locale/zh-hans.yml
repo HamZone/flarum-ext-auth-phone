@@ -1,0 +1,7 @@
+hamzone-auth-phone:
+  admin:
+    settings:
+      api_sms_ali_access_id: 阿里云 accessKeyId
+      api_sms_ali_access_sec: 阿里云 accessKeySecret
+      api_sms_ali_sign: 阿里云短信签名
+      api_sms_ali_template_code: 阿里云短信模板Code

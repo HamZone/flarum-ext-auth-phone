@@ -2,12 +2,15 @@
   "name": "hamzone/flarum-ext-auth-phone",
   "description": "auth by phone sms once code",
   "keywords": [
-    "flarum"
+    "flarum","sms","phone","aliyun","tencentCloud","auth"
   ],
   "type": "flarum-extension",
   "license": "Apache-2.0",
   "require": {
-    "flarum/core": "^1.0.0"
+    "flarum/core": "*",
+    "fof/components": "^1.0.0",
+    "alibabacloud/dysmsapi-20170525": "2.0.22",
+    "alibabacloud/darabonba-openapi": "^0.2.8"
   },
   "authors": [
     {

@@ -13,14 +13,19 @@ namespace HamZone\AuthPhone;
 
 use Flarum\Extend;
 use Flarum\Api\Serializer\ForumSerializer;
+use FoF\Components\Extend\AddFofComponents;
 
 return [
+    //需要引入 不然前端会报错
+    new AddFofComponents(),
+
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/resources/less/forum.less'),
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/resources/less/admin.less'),
+
     new Extend\Locales(__DIR__ . '/resources/locale'),
 
 

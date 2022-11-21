@@ -10,11 +10,10 @@ return [
         }
 
         $schema->create('user_phone', function (Blueprint $table) {
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->index();
             $table->string('phone');
+            $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     },
     'down' => function (Builder $schema) {

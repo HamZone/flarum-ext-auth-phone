@@ -1,0 +1,7 @@
+hamzone-auth-phone:
+  admin:
+    settings:
+      api_sms_ali_access_id: Aliyun accessKeyId
+      api_sms_ali_access_sec: Aliyun accessKeySecret
+      api_sms_ali_sign: Aliyun SMS sign
+      api_sms_ali_template_code: Aliyun template code
