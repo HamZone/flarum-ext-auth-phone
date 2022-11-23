@@ -13,7 +13,10 @@ namespace HamZone\AuthPhone;
 
 use Flarum\Extend;
 use Flarum\Api\Serializer\ForumSerializer;
+use Flarum\Api\Serializer\UserSerializer;
 use FoF\Components\Extend\AddFofComponents;
+
+// use HamZone\AuthPhone\Controllers\SMSController;
 
 return [
     //需要引入 不然前端会报错
@@ -36,10 +39,22 @@ return [
         return PermissionGroupProcessor::process($actor, $groupIds);
     }),
 
+    (new Extend\Routes('api'))
+        ->post('/auth/sms/send', 'auth.sms.api.send', Controllers\SMSController::class),
+
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attribute('canStartDiscussion', function (ForumSerializer $serializer) {
             return false;
         }),
 
+    (new Extend\ApiSerializer(UserSerializer::class))
+        ->attributes(function($serializer, $user, $attributes) {
+
+            $attributes['SMSAuth'] = [
+                'isAuth' => false,
+            ];
+
+            return $attributes;
+        }),
 
 ];

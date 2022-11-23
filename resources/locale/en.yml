@@ -5,3 +5,16 @@ hamzone-auth-phone:
       api_sms_ali_access_sec: Aliyun accessKeySecret
       api_sms_ali_sign: Aliyun SMS sign
       api_sms_ali_template_code: Aliyun template code
+    forum:
+      alerts:
+        already_linked: Mobile phone linked
+        already_used: Mobile phone already used
+        link_success: Link success
+        error: Error
+      modals:
+        link:
+          title: Mobile SMS Auth
+      buttons:
+        link: Mobile SMS Auth
+        send: Send
+        unlink: Unlink Mobile Phone

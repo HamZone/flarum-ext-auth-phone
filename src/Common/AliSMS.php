@@ -2,11 +2,16 @@
 
 namespace HamZone\AuthPhone\Common;
 
+use Exception;
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Dysmsapi;
 
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Models\SendSmsRequest;
 use AlibabaCloud\Tea\Utils\Utils\RuntimeOptions;
+use AlibabaCloud\Tea\Exception\TeaError;
+
 use Darabonba\OpenApi\Models\Config;
+
+use Flarum\Settings\SettingsRepositoryInterface;
 
 class AliSMS 
 {
@@ -22,26 +27,28 @@ class AliSMS
         return new Dysmsapi($config);
     }
 
-    public static function send($args){
-        // 初始化 Client，采用 AK&SK 鉴权访问的方式，此方式可能会存在泄漏风险，建议使用 STS 方式。鉴权访问方式请参考：https://help.aliyun.com/document_detail/311677.html
-        // 获取 AK 链接：https://usercenter.console.aliyun.com
-        $client = self::createClient("accessKeyId", "accessKeySecret");
+    public static function send($phone, $code){
+        $settings = app(SettingsRepositoryInterface::class);
+
+        $client = self::createClient(
+            $settings->get('flarum-ext-auth-phone.sms_ali_access_id'), 
+            $settings->get('flarum-ext-auth-phone.sms_ali_access_sec')
+        );
         $sendSmsRequest = new SendSmsRequest([
-            "signName" => "your_value",
-            "templateCode" => 1,
-            "phoneNumbers" => "your_value",
-            "templateParam" => "your_value"
+            "signName" => $settings->get('flarum-ext-auth-phone.sms_ali_sign'),
+            "templateCode" => $settings->get('flarum-ext-auth-phone.sms_ali_template_code'),
+            "phoneNumbers" => $phone,
+            "templateParam" => "{\"code\":\"".$code."\"}"
         ]);
-        // try {
+        try {
             // 复制代码运行请自行打印 API 的返回值
             $client->sendSmsWithOptions($sendSmsRequest, new RuntimeOptions([]));
-        // }
-        // catch (Exception $error) {
-        //     if (!($error instanceof TeaError)) {
-        //         $error = new TeaError([], $error->getMessage(), $error->getCode(), $error);
-        //     }
-        //     // 如有需要，请打印 error
-        //     Utils::assertAsString($error->message);
-        // }
+        }
+        catch (Exception $error) {
+            if (!($error instanceof TeaError)) {
+                $error = new TeaError([], $error->getMessage(), $error->getCode(), $error);
+            }
+            app('log')->error( $error->message );
+        }
     }
 }

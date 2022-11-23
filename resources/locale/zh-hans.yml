@@ -5,3 +5,16 @@ hamzone-auth-phone:
       api_sms_ali_access_sec: 阿里云 accessKeySecret
       api_sms_ali_sign: 阿里云短信签名
       api_sms_ali_template_code: 阿里云短信模板Code
+  forum:
+    alerts:
+      already_linked: 已绑定手机
+      already_used: 手机号已被使用
+      link_success: 绑定成功
+      error: 绑定出错
+    modals:
+      link:
+        title: 验证手机号
+    buttons:
+      link: 验证手机号
+      send: 发送验证码
+      unlink: 解绑手机
