@@ -12,6 +12,9 @@ use AlibabaCloud\Tea\Exception\TeaError;
 use Darabonba\OpenApi\Models\Config;
 
 use Flarum\Settings\SettingsRepositoryInterface;
+use Illuminate\Contracts\Cache\Repository;
+
+use HamZone\AuthPhone\Common\GenerateCode;
 
 class AliSMS 
 {
@@ -27,9 +30,20 @@ class AliSMS
         return new Dysmsapi($config);
     }
 
-    public static function send($phone, $code){
+    public static function send($data){
+        $msg = ["status" => false , "msg" => ""];
+        $phone = isset($data["phone"]) ? $data["phone"] : 0;
+        if (!$phone){
+            $msg["msg"] = "param is invalid";
+            return $msg;
+        }
+        $generate = resolve(GenerateCode::class);
+        $code = $generate->generate($phone);
+        if ($code == 1){
+            $msg["msg"] = "code_exist";
+            return $msg;
+        }
         $settings = app(SettingsRepositoryInterface::class);
-
         $client = self::createClient(
             $settings->get('flarum-ext-auth-phone.sms_ali_access_id'), 
             $settings->get('flarum-ext-auth-phone.sms_ali_access_sec')
@@ -41,14 +55,17 @@ class AliSMS
             "templateParam" => "{\"code\":\"".$code."\"}"
         ]);
         try {
-            // 复制代码运行请自行打印 API 的返回值
             $client->sendSmsWithOptions($sendSmsRequest, new RuntimeOptions([]));
+            $msg["status"] = true;
+            return $msg;
         }
         catch (Exception $error) {
             if (!($error instanceof TeaError)) {
                 $error = new TeaError([], $error->getMessage(), $error->getCode(), $error);
             }
             app('log')->error( $error->message );
+            $msg["msg"] = $error->message;
+            return $msg;
         }
     }
 }

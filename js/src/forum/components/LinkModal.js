@@ -2,6 +2,7 @@ import Modal from 'flarum/components/Modal';
 import Button from 'flarum/components/Button';
 
 export default class LinkModal extends Modal {
+    
     className() {
         return `SMSAuthLinkModal Modal--small`;
     }
@@ -15,10 +16,29 @@ export default class LinkModal extends Modal {
             <div className="Modal-body">
                 <div className="Form Form--centered">
                     <div className="Form-group">
-                        <Button className={`Button LogInButton--SMSAuth`} loading={this.loading} disabled={this.loading}
-                            path={`/auth/sms`} onclick={() => this.sendSMS()}>
+                        <input class="FormControl bottom" 
+                            className="phone" 
+                            placeholder={app.translator.trans(`hamzone-auth-phone.forum.modals.link.phone`)}
+                            oninput={e => this.phone = e.target.value}
+                            disabled={this.inputDisabled}
+                        >
+                        </input>
 
+                        <input class="FormControl bottom" 
+                            className="code" 
+                            placeholder={app.translator.trans(`hamzone-auth-phone.forum.modals.link.code`)}
+                            oninput={e => this.code = e.target.value}
+                            style={{display:this.display ? "block" : "none"}}
+                        ></input>
+
+                        <Button className={`Button LogInButton--SMSAuth`} loading={this.loading} disabled={this.loading}
+                            onclick={() => this.sendSMS(this.phone)} style={{display:this.displaySend}}>
                             {app.translator.trans(`hamzone-auth-phone.forum.buttons.send`)}
+                        </Button>
+
+                        <Button className={`Button LogInButton--SMSAuth`} style={{display:this.display ? "block" : "none"}}
+                            onclick={() => this.submit(this.phone, this.code)}>
+                            {app.translator.trans(`hamzone-auth-phone.forum.buttons.submit`)}
                         </Button>
                     </div>
                 </div>
@@ -26,13 +46,83 @@ export default class LinkModal extends Modal {
         );
     }
 
-    sendSMS() {
-        // ${app.forum.attribute('apiUrl')}/${config.api.uri}/link
+    sendSMS(phone) {
+        var t = typeof phone;
+        if(t != 'string'){
+            return;
+        }
+        this.loading = true;
+        this.inputDisabled = true;
+
+        if(phone.length!=11){
+            this.loading = false;
+            this.inputDisabled = false;
+            app.alerts.show({ type: 'error' }, 
+                app.translator.trans(`hamzone-auth-phone.forum.alerts.wrong_num`)
+            );
+            return;
+        }
+        app
+            .request({
+                url: app.forum.attribute('apiUrl') + "/auth/sms" + '/send',
+                method: 'POST',
+                body: { phone },
+                errorHandler: this.onerror.bind(this),
+            }).catch((error) => {
+                this.inputDisabled = false;
+                app.alerts.show(
+                Alert,
+                { type: 'error' },
+                error
+                );
+            }).then((result) => {
+                this.loading = false;
+                this.display = true;
+                
+                this.inputDisabled = true;
+                this.displaySend = "none";
+
+                if(!result.status){
+                    app.alerts.dismiss(alert);
+                    switch(result.msg){
+                        case "code_exist":
+                            app.alerts.show({ type: 'error' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.code_exist`));
+                            break;
+                        default:
+                            this.inputDisabled = false;
+                            app.alerts.show({ type: 'error' }, result.msg);
+                            break;
+                    }
+                    return;
+                }
+
+                
+
+                app.alerts.show({ type: 'success' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.send_success`));
+            });
+    }
+
+    submit(phone,code){
+        console.log(phone,code)
+        var t = typeof phone;
+        var c = typeof code;
+        if(t != 'string' || code != 'string'){
+            return;
+        }
         app
         .request({
-            url: app.forum.attribute('apiUrl') + "/auth/sms" + '/send',
+            url: app.forum.attribute('apiUrl') + "/auth/sms" + '/bind',
             method: 'POST',
+            body: { phone, code },
             errorHandler: this.onerror.bind(this),
-        })
+        }).catch((error) => {
+            app.alerts.show(
+            Alert,
+            { type: 'error' },
+            error
+            );
+        }).then((result) => {
+           
+        });
     }
 }

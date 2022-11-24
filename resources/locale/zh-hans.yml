@@ -4,17 +4,24 @@ hamzone-auth-phone:
       api_sms_ali_access_id: 阿里云 accessKeyId
       api_sms_ali_access_sec: 阿里云 accessKeySecret
       api_sms_ali_sign: 阿里云短信签名
-      api_sms_ali_template_code: 阿里云短信模板Code
+      api_sms_ali_template_code: 阿里云短信模板 code
   forum:
     alerts:
+      limit: 在您验证手机号码之前，我们临时限制了您账户的操作权限。
       already_linked: 已绑定手机
       already_used: 手机号已被使用
       link_success: 绑定成功
       error: 绑定出错
+      wrong_num: 请输入正确的手机号码
+      code_exist: 验证码已发送 请 5 分钟后再操作
+      send_success: 验证码发送成功 请及时填写
     modals:
       link:
         title: 验证手机号
+        phone: 手机号码
+        code: 验证码
     buttons:
       link: 验证手机号
       send: 发送验证码
       unlink: 解绑手机
+      submit: 提交

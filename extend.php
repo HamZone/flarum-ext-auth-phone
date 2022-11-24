@@ -40,7 +40,8 @@ return [
     }),
 
     (new Extend\Routes('api'))
-        ->post('/auth/sms/send', 'auth.sms.api.send', Controllers\SMSController::class),
+        ->post('/auth/sms/send', 'auth.sms.api.send', Controllers\SMSSendController::class)
+        ->post('/auth/sms/bind', 'auth.sms.api.bind', Controllers\SMSBlindController::class),
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attribute('canStartDiscussion', function (ForumSerializer $serializer) {
