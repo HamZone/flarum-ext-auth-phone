@@ -50,6 +50,15 @@ export default class SettingsPage extends ExtensionPage {
                             {app.translator.trans(`hamzone-auth-phone.admin.settings.api_sms_ali_template_code`)}
                         </StringItem>
                     </div>
+                    <div className="Form-group">
+                        <StringItem
+                            name={`flarum-ext-auth-phone.sms_ali_expire_second`}
+                            setting={this.setting}
+                            {...{ ['required']: true }}
+                        >
+                            {app.translator.trans(`hamzone-auth-phone.admin.settings.api_sms_ali_expire_second`)}
+                        </StringItem>
+                    </div>
                     {this.submitButton()}
                 </div>
             </div>

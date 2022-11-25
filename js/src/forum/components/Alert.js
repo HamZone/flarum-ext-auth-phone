@@ -1,5 +1,8 @@
 
 import app from 'flarum/forum/app';
+import listItems from 'flarum/common/helpers/listItems';
+import LinkModal from './LinkModal';
+import Button from 'flarum/common/components/Button';
 
 let temporarilyHidden = false;
 
@@ -19,13 +22,25 @@ export default class UpdateAlert {
       return m('div');
     }
 
+    const controls = [
+      Button.component(
+        {
+          className: 'Button Button--link',
+          onclick: () => {
+            app.modal.show(LinkModal);
+          },
+        },
+        app.translator.trans('hamzone-auth-phone.forum.alerts.toLink')
+      ),
+    ];
+    const dismissControl = [];
     return m(
         '.Alert.Alert-info',
         m('.container', [
           m(
             'span.Alert-body', app.translator.trans(`hamzone-auth-phone.forum.alerts.limit`)
           ),
-          m('ul.Alert-controls', ""),
+          m('ul.Alert-controls',  listItems(controls.concat(dismissControl))),
         ])
     );
   }

@@ -38,12 +38,16 @@ class AliSMS
             return $msg;
         }
         $generate = resolve(GenerateCode::class);
-        $code = $generate->generate($phone);
-        if ($code == 1){
+        $settings = app(SettingsRepositoryInterface::class);
+        $second = $settings->get('flarum-ext-auth-phone.sms_ali_expire_second');
+        list($res, $status) = $generate->generate($phone, $second);
+        app('log')->info( $res );
+        if ($status){
             $msg["msg"] = "code_exist";
+            $msg["time"] = ceil(($res - time())/60);
             return $msg;
         }
-        $settings = app(SettingsRepositoryInterface::class);
+       
         $client = self::createClient(
             $settings->get('flarum-ext-auth-phone.sms_ali_access_id'), 
             $settings->get('flarum-ext-auth-phone.sms_ali_access_sec')
@@ -52,10 +56,28 @@ class AliSMS
             "signName" => $settings->get('flarum-ext-auth-phone.sms_ali_sign'),
             "templateCode" => $settings->get('flarum-ext-auth-phone.sms_ali_template_code'),
             "phoneNumbers" => $phone,
-            "templateParam" => "{\"code\":\"".$code."\"}"
+            "templateParam" => "{\"code\":\"".$res."\"}"
         ]);
         try {
-            $client->sendSmsWithOptions($sendSmsRequest, new RuntimeOptions([]));
+            // https://help.aliyun.com/document_detail/55288.html
+            $res = $client->sendSmsWithOptions($sendSmsRequest, new RuntimeOptions([]));
+            if (isset($res->statusCode) && $res->statusCode!=200){
+                app('log')->info( $res->statusCode );
+                $msg["status"] = false;
+                $msg["msg"] = "Aliyun API Error";
+                return $msg;
+            }
+           
+            if (isset($res->body->code) && strtolower($res->body->code)!="ok"){
+                app('log')->info( $res->body->code );
+                app('log')->info( $res->body->message );
+                app('log')->info( $res->body->requestId );
+                
+                $msg["status"] = false;
+                $msg["msg"] = $res->body->message;
+                return $msg;
+            }
+
             $msg["status"] = true;
             return $msg;
         }

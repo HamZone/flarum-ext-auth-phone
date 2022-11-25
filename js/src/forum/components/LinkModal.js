@@ -86,7 +86,9 @@ export default class LinkModal extends Modal {
                     app.alerts.dismiss(alert);
                     switch(result.msg){
                         case "code_exist":
-                            app.alerts.show({ type: 'error' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.code_exist`));
+                            app.alerts.show({ type: 'error' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.code_exist`,{
+                                time: result.time
+                            }));
                             break;
                         default:
                             this.inputDisabled = false;
@@ -106,7 +108,7 @@ export default class LinkModal extends Modal {
         console.log(phone,code)
         var t = typeof phone;
         var c = typeof code;
-        if(t != 'string' || code != 'string'){
+        if(t != 'string' || c != 'string'){
             return;
         }
         app

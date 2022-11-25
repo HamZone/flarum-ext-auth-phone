@@ -5,6 +5,7 @@ hamzone-auth-phone:
       api_sms_ali_access_sec: Aliyun accessKeySecret
       api_sms_ali_sign: Aliyun SMS sign
       api_sms_ali_template_code: Aliyun template code
+      api_sms_ali_expire_second: SMS expire second(default:300s)
   forum:
     alerts:
       limit: Before you verify your mobile number, we temporarily restricted your account's operation authority. 
@@ -13,8 +14,9 @@ hamzone-auth-phone:
       link_success: Link success
       error: Error
       wrong_num: Please enter the correct mobile phone number
-      code_exist: The verification code has been sent. Please operate in 5 minutes later
+      code_exist: The verification code has been sent. Please operate in {time} minutes later
       send_success: verification code sent success
+      toLink: Go to verify
     modals:
       link:
         title: Mobile SMS Auth

@@ -1,7 +1,7 @@
 <?php
 namespace HamZone\AuthPhone\Controllers;
 
-use HamZone\AuthPhone\Common\AliSMS;
+use HamZone\AuthPhone\Common\Blind;
 
 use Flarum\Http\RequestUtil;
 
@@ -12,12 +12,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 
-class SMSBlindController implements RequestHandlerInterface
+class SMSBindController implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertRegistered();
-        return new JsonResponse( AliSMS::send( $request->getParsedBody()) );
+        return new JsonResponse( Blind::smsAuth($actor, $request->getParsedBody()) );
     }
 }
