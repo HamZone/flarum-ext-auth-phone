@@ -27,3 +27,5 @@ composer update hamzone/flarum-ext-auth-phone
         "hamzone/flarum-ext-auth-phone":"@dev"
     }
 ```
+
+php flarum migrate

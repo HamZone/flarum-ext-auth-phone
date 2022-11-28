@@ -16,8 +16,8 @@ use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Api\Serializer\UserSerializer;
 use FoF\Components\Extend\AddFofComponents;
 use Flarum\Database\AbstractModel;
-
-// use HamZone\AuthPhone\Controllers\SMSController;
+use HamZone\AuthPhone\Listener\SavePhone;
+use Flarum\User\Event\Saving;
 
 return [
     //需要引入 不然前端会报错
@@ -32,16 +32,8 @@ return [
 
     new Extend\Locales(__DIR__ . '/resources/locale'),
 
-
-    // (new Extend\Policy())
-    //     ->modelPolicy(User::class, Access\UserPolicy::class),
-
     (new Extend\User())->permissionGroups(function ($actor, $groupIds) {
         return PermissionGroupProcessor::process($actor, $groupIds);
-    }),
-
-    (new Extend\Model(User::class))->relationship('userPhone', function (AbstractModel $user) {
-        return $user->belongsToMany(User::class, 'user_phone');
     }),
 
     (new Extend\Routes('api'))
@@ -52,6 +44,9 @@ return [
         ->attribute('canStartDiscussion', function (ForumSerializer $serializer) {
             return false;
         }),
+
+    (new Extend\Event())
+        ->listen(Saving::class, SavePhone::class),
 
     (new Extend\ApiSerializer(UserSerializer::class))
         ->attributes(function($serializer, $user, $attributes) {

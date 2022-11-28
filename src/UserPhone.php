@@ -7,10 +7,10 @@ use Flarum\User\User;
 
 class UserPhone extends AbstractModel
 {
-    protected $table = 'fof_terms_policies';
+    protected $table = 'user_phone';
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_phone');
+        return $this->belongsTo(User::class);
     }
 }
