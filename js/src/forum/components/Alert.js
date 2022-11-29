@@ -3,22 +3,17 @@ import app from 'flarum/forum/app';
 import listItems from 'flarum/common/helpers/listItems';
 import LinkModal from './LinkModal';
 import Button from 'flarum/common/components/Button';
-
-let temporarilyHidden = false;
-
 export default class UpdateAlert {
-  shouldShowAlert() {
-    if (temporarilyHidden) {
-      return false;
-    }
-
+  HideAlert() {
     const user = app.session.user;
-
-    return user && true;
+    if(!user){
+      return true;
+    }
+    return user.data.attributes.SMSAuth.isAuth;
   }
 
   view(){
-    if (!this.shouldShowAlert()) {
+    if (this.HideAlert()) {
       return m('div');
     }
 

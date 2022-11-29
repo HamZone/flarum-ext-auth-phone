@@ -4,7 +4,7 @@ import app from 'flarum/app';
 
 export * from './components';
 import SettingsPage from 'flarum/components/SettingsPage';
-import SMSApplication from './components/SMS';
+// import SMSApplication from './components/SMS';
 
 import UnlinkModal from "./components/UnlinkModal";
 import LinkModal from "./components/LinkModal";
@@ -28,11 +28,11 @@ app.initializers.add('hamzone/flarum-ext-auth-phone', () => {
 
       items.add(`linkSMSAuth`,
           <Button className={`Button linkSMSAuthButton--${isAuth ? 'danger' : 'success'}`} icon="fas fa-id-badge"
-              path={`/auth/sms`} onclick={() => app.modal.show(isAuth ? UnlinkModal : LinkModal)}>
+              onclick={() => app.modal.show(isAuth ? UnlinkModal : LinkModal)}>
               {app.translator.trans(`hamzone-auth-phone.forum.buttons.${isAuth ? 'unlink' : 'link'}`)}
           </Button>
       );
   });
 });
 
-app.qq = new SMSApplication();
+// app.qq = new SMSApplication();

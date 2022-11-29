@@ -2,14 +2,6 @@ import Modal from 'flarum/components/Modal';
 import Button from 'flarum/components/Button';
 
 export default class LinkModal extends Modal {
-    oninit(vnode) {
-        super.oninit(vnode);
-    
-        app.store.all('fof-terms-policies').forEach((policy) => {
-          this[policy.form_key()] = false;
-        });
-    }
-
     className() {
         return `SMSAuthLinkModal Modal--small`;
     }
@@ -104,41 +96,33 @@ export default class LinkModal extends Modal {
                     }
                     return;
                 }
-
-                
-
                 app.alerts.show({ type: 'success' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.send_success`));
             });
     }
 
     submit(phone,code){
-        // var t = typeof phone;
-        // var c = typeof code;
-        // if(t != 'string' || c != 'string'){
-        //     return;
-        // }
-        console.log(phone,code);
+        var t = typeof phone;
+        var c = typeof code;
+        if(t != 'string' || c != 'string'){
+            return;
+        }
+        // console.log(phone,code);
         const user = app.session.user;
         user
           .save({
-            phone: "test",
+            phone: phone,
+            code: code
           })
-          .then(() => console.log("Saved"));
-        
-        // app
-        // .request({
-        //     url: app.forum.attribute('apiUrl') + "/auth/sms" + '/bind',
-        //     method: 'POST',
-        //     // body: { phone, code },
-        //     errorHandler: this.onerror.bind(this),
-        // }).catch((error) => {
-        //     app.alerts.show(
-        //     Alert,
-        //     { type: 'error' },
-        //     error
-        //     );
-        // }).then((result) => {
-           
-        // });
+          .catch((error) => {
+                app.alerts.show(
+                Alert,
+                { type: 'error' },
+                error
+                );
+            })
+          .then(() => {
+                this.hide();
+                window.location.reload();
+          });
     }
 }

@@ -30,17 +30,22 @@ class AliSMS
         return new Dysmsapi($config);
     }
 
-    public static function send($data){
+    public static function send($data, $uid){
         $msg = ["status" => false , "msg" => ""];
         $phone = isset($data["phone"]) ? $data["phone"] : 0;
         if (!$phone){
             $msg["msg"] = "param is invalid";
             return $msg;
         }
+        
+        app('log')->info( "send phone code uid:".$uid." phone:".$phone);
+
+        //检测用户是否已经绑定手机
+        
         $generate = resolve(GenerateCode::class);
         $settings = app(SettingsRepositoryInterface::class);
         $second = $settings->get('flarum-ext-auth-phone.sms_ali_expire_second');
-        list($res, $status) = $generate->generate($phone, $second);
+        list($res, $status) = $generate->generate($uid, $phone, $second);
         app('log')->info( $res );
         if ($status){
             $msg["msg"] = "code_exist";

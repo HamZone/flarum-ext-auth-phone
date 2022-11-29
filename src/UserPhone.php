@@ -5,12 +5,8 @@ namespace HamZone\AuthPhone;
 use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 
-class UserPhone extends AbstractModel
+class PhoneHistory extends AbstractModel
 {
-    protected $table = 'user_phone';
+    protected $table = 'phone_history';
 
-    public function users()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

@@ -4,8 +4,6 @@ namespace HamZone\AuthPhone\Controllers;
 use HamZone\AuthPhone\Common\AliSMS;
 
 use Flarum\Http\RequestUtil;
-
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,6 +16,6 @@ class SMSSendController implements RequestHandlerInterface
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertRegistered();
-        return new JsonResponse( AliSMS::send( $request->getParsedBody()) );
+        return new JsonResponse( AliSMS::send( $request->getParsedBody(), $actor->id) );
     }
 }

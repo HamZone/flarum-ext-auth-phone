@@ -7,41 +7,27 @@ export default class UnlinkModal extends Modal {
     }
 
     title() {
-        return app.translator.trans(`${config.module.name}.forum.modals.unlink.title`);
+        return app.translator.trans(`hamzone-auth-phone.forum.modals.unlink.title`);
     }
 
     content() {
-        const {
-            data: {
-                attributes: {
-                    'SMSAuth': {
-                        providersCount = 0
-                    },
-                },
-            },
-        } = app.session.user;
-
         return (
             <div className="Modal-body">
                 <div className="Form Form--centered">
                     <div className="Form-group" id="submit-button-group">
-                        <h3>{app.translator.trans(`${config.module.name}.forum.modals.unlink.info.confirm`)}</h3>
-                        {(providersCount <= 1)
-                            ?
-                            <p className={`${config.module.id}Text--danger`}><i className="fas fa-exclamation-triangle fa-fw" />
-                                <b>{app.translator.trans(`${config.module.name}.forum.modals.unlink.info.no_providers`)}</b>
-                            </p>
-                            : ''
-                        }
+                        <h3>{app.translator.trans(`hamzone-auth-phone.forum.modals.unlink.title`)}</h3>
+                        <p className={`SMSAuthText--danger`}><i className="fas fa-exclamation-triangle fa-fw" />
+                            <b>{app.translator.trans(`hamzone-auth-phone.forum.modals.unlink.no_providers`)}</b>
+                        </p>
                         <br />
                         <div className="ButtonGroup">
-                            <Button type={'submit'} className={`Button ${config.module.id}Button--danger`} icon={'fas fa-exclamation-triangle'}
+                            <Button type={'submit'} className={`Button SMSAuthButton--danger`} icon={'fas fa-exclamation-triangle'}
                                 loading={this.loading}>
-                                {app.translator.trans(`${config.module.name}.forum.modals.unlink.buttons.confirm`)}
+                                {app.translator.trans(`hamzone-auth-phone.forum.modals.unlink.confirm`)}
                             </Button>
                             <Button className={'Button Button--primary'} icon={'fas fa-exclamation-triangle'}
                                 onclick={() => this.hide()} disabled={this.loading}>
-                                {app.translator.trans(`${config.module.name}.forum.modals.unlink.buttons.cancel`)}
+                                {app.translator.trans(`hamzone-auth-phone.forum.modals.unlink.cancel`)}
                             </Button>
                         </div>
                     </div>
@@ -59,11 +45,11 @@ export default class UnlinkModal extends Modal {
 
         app.request({
             method: 'POST',
-            url: `${app.forum.attribute('apiUrl')}/${config.api.uri}/unlink`,
+            url: app.forum.attribute('apiUrl')+  "/auth/sms"+ '/unlink',
         }).then(() => {
             app.session.user.savePreferences();
             this.hide();
-            alert = app.alerts.show({ type: 'success' }, app.translator.trans(`${config.module.name}.forum.alerts.unlink_success`));
+            alert = app.alerts.show({ type: 'success' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.unlink_success`));
         });
 
         setTimeout(() => {

@@ -17,11 +17,17 @@ hamzone-auth-phone:
       code_exist: 验证码已发送 请 {time} 分钟后再操作
       send_success: 验证码发送成功 请及时填写
       toLink: 前往验证
+      unlink_success: 解绑成功
     modals:
       link:
         title: 验证手机号
         phone: 手机号码
         code: 验证码
+      unlink:
+        title: 解绑手机
+        confirm: 确定
+        cancel: 取消
+        no_providers: 解绑后您的账户权限将受到一些限制
     buttons:
       link: 验证手机号
       send: 发送验证码

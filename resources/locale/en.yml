@@ -17,11 +17,17 @@ hamzone-auth-phone:
       code_exist: The verification code has been sent. Please operate in {time} minutes later
       send_success: verification code sent success
       toLink: Go to verify
+      unlink_success: Unlink success
     modals:
       link:
         title: Mobile SMS Auth
         phone: Phone Number
         code: Verification Code
+      unlink:
+        title: Mobile Unlink
+        confirm: Confirm
+        cancel: Cancel
+        no_providers: Your account permission will be restricted after unbinding
     buttons:
       link: Mobile SMS Auth
       send: Send
