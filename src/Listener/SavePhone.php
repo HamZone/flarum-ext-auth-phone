@@ -6,6 +6,7 @@ use Flarum\User\Event\Saving;
 use Illuminate\Support\Arr;
 use Flarum\Foundation\ValidationException;
 use Illuminate\Contracts\Cache\Repository;
+use HamZone\AuthPhone\PhoneHistory;
 
 class SavePhone
 {
@@ -21,36 +22,36 @@ class SavePhone
         $user = $event->user;
         $data = $event->data;
         $actor = $event->actor;
-
         $isSelf = $actor->id === $user->id;
         $canEdit = $actor->can('edit', $user);
         $attributes = Arr::get($data, 'attributes', []);
-
         if ( isset($attributes['phone']) ) {
             if (!$isSelf) {
                 $actor->assertPermission($canEdit);
             }
             if ($attributes['phone']==""){
-                throw new ValidationException(["Phone is invalid"]);
+                PhoneHistory::insert([
+                    "user_id" => $user->id,
+                    "phone" => $user->phone,
+                    "created_time" => time()
+                ]);
+                $user->phone = "";
+                $user->save();
+                return;
             }
             if(!isset($attributes['code']) || $attributes['code']==""){
-                //Code is invalid
-                throw new ValidationException(["请输入验证码"]);
+                throw new ValidationException(["msg" => "code_null"]);
             }
-
             $code = $this->cache->get($user->id."_".$attributes['phone']);
             if(!$code){
-                //The verification code has expired or does not exist
-                throw new ValidationException(["验证码已过期或不存在，请重新发送"]);
+                throw new ValidationException(["msg"=>"code_expired"]);
             }
             if($code!=$attributes['code']){
-                throw new ValidationException(["验证码错误"]);
+                throw new ValidationException(["msg"=>"code_invalid"]);
             }
             $this->cache->delete($user->id."_".$attributes['phone']);
             $this->cache->delete($attributes['phone']."_time");
-
             $user->phone = $attributes['phone'];
-
             $user->save();
         }
     }

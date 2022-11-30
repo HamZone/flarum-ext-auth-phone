@@ -42,18 +42,26 @@ export default class UnlinkModal extends Modal {
 
         e.preventDefault();
         this.loading = true;
-
-        app.request({
-            method: 'POST',
-            url: app.forum.attribute('apiUrl')+  "/auth/sms"+ '/unlink',
-        }).then(() => {
-            app.session.user.savePreferences();
-            this.hide();
-            alert = app.alerts.show({ type: 'success' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.unlink_success`));
-        });
-
+        const user = app.session.user;
+        user
+          .save({
+            phone: "",
+          })
+          .catch((error) => {
+                app.alerts.show(
+                Alert,
+                { type: 'error' },
+                error
+                );
+            })
+          .then(() => {
+                this.hide();
+                m.redraw();
+                alert = app.alerts.show({ type: 'success' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.unlink_success`));
+          });
         setTimeout(() => {
             app.alerts.dismiss(alert);
-        }, 5000);
+            window.location.reload();
+        }, 3000);
     }
 }

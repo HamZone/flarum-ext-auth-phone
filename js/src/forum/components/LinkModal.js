@@ -89,6 +89,15 @@ export default class LinkModal extends Modal {
                                 time: result.time
                             }));
                             break;
+                        case "code_null":
+                            app.alerts.show({ type: 'error' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.code_null`));
+                            break;
+                        case "code_expired":
+                            app.alerts.show({ type: 'error' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.code_expired`));
+                            break;
+                        case "code_invalid":
+                            app.alerts.show({ type: 'error' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.code_invalid`));
+                            break;
                         default:
                             this.inputDisabled = false;
                             app.alerts.show({ type: 'error' }, result.msg);
@@ -106,7 +115,6 @@ export default class LinkModal extends Modal {
         if(t != 'string' || c != 'string'){
             return;
         }
-        // console.log(phone,code);
         const user = app.session.user;
         user
           .save({
@@ -122,6 +130,8 @@ export default class LinkModal extends Modal {
             })
           .then(() => {
                 this.hide();
+                app.alerts.show({ type: 'success' }, app.translator.trans(`hamzone-auth-phone.forum.alerts.link_success`));
+                m.redraw();
                 window.location.reload();
           });
     }

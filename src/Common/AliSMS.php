@@ -20,9 +20,7 @@ class AliSMS
 {
     public static function createClient($accessKeyId, $accessKeySecret){
         $config = new Config([
-            // 必填，您的 AccessKey ID
             "accessKeyId" => $accessKeyId,
-            // 必填，您的 AccessKey Secret
             "accessKeySecret" => $accessKeySecret
         ]);
         // 访问的域名
@@ -38,9 +36,7 @@ class AliSMS
             return $msg;
         }
         
-        app('log')->info( "send phone code uid:".$uid." phone:".$phone);
-
-        //检测用户是否已经绑定手机
+        app('log')->info( "send phone code uid:".$uid." phone:".$phone);        
         
         $generate = resolve(GenerateCode::class);
         $settings = app(SettingsRepositoryInterface::class);

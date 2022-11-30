@@ -18,6 +18,9 @@ hamzone-auth-phone:
       send_success: 验证码发送成功 请及时填写
       toLink: 前往验证
       unlink_success: 解绑成功
+      code_null: 请输入验证码
+      code_expired: 验证码已过期或不存在，请重新发送
+      code_invalid: 验证码有误，请重新输入
     modals:
       link:
         title: 验证手机号

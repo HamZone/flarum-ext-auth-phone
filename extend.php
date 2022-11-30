@@ -15,11 +15,14 @@ use Flarum\Extend;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Api\Serializer\UserSerializer;
 use FoF\Components\Extend\AddFofComponents;
-use Flarum\Database\AbstractModel;
 use Flarum\User\Event\Saving;
 
 use HamZone\AuthPhone\Listener\SavePhone;
 use HamZone\AuthPhone\Middlewares\DiscussionMiddleware;
+use HamZone\AuthPhone\Providers\Provider;
+
+use Flarum\Foundation\Paths;
+use Flarum\Http\UrlGenerator;
 
 return [
     //需要引入 不然前端会报错
@@ -36,14 +39,9 @@ return [
     //翻译
     new Extend\Locales(__DIR__ . '/resources/locale'),
 
-    // (new Extend\User())->permissionGroups(function ($actor, $groupIds) {
-    //     return PermissionGroupProcessor::process($actor, $groupIds);
-    // }),
-
     //接口
     (new Extend\Routes('api'))
-        ->post('/auth/sms/send', 'auth.sms.api.send', Controllers\SMSSendController::class)
-        ->post('/auth/sms/unlink', 'auth.sms.api.unlink', Controllers\SMSUnlinkController::class),
+        ->post('/auth/sms/send', 'auth.sms.api.send', Controllers\SMSSendController::class),
 
     //发帖限制
     (new Extend\ApiSerializer(ForumSerializer::class))
@@ -57,13 +55,17 @@ return [
     //接口限制
     (new Extend\Middleware('api'))->add(DiscussionMiddleware::class),
 
-    (new Extend\Model(User::class))->relationship('phoneHistory', function (AbstractModel $user) {
-        return $user->belongsToMany(PhoneHistory::class, 'phone_history');
-    }),
-
     //事件监听
-    (new Extend\Event())
-        ->listen(Saving::class, SavePhone::class),
+    (new Extend\Event())->listen(Saving::class, SavePhone::class),
+
+    (new Extend\ServiceProvider())->register(Provider::class),
+    (new Extend\Filesystem())
+        ->disk('aes', function (Paths $paths, UrlGenerator $url) {
+            return [
+                'root'   => "$paths->key",
+                'url'    => ""
+            ];
+    }),
 
     //初始化页面状态
     (new Extend\ApiSerializer(UserSerializer::class))

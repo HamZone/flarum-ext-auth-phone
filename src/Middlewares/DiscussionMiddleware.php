@@ -29,7 +29,7 @@ class DiscussionMiddleware implements MiddlewareInterface
                             'status' => '422',
                             'code' => 'validation_error',
                             'source' => [
-                                'pointer' => '/api/discussions',
+                                'pointer' => $path,
                             ],
                             'detail' => 'Yikes! You need to verify your mobile number.',
                         ],

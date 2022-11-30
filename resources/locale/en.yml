@@ -18,6 +18,9 @@ hamzone-auth-phone:
       send_success: verification code sent success
       toLink: Go to verify
       unlink_success: Unlink success
+      code_null: Code required
+      code_expired: Code expired
+      code_invalid: Code invalid
     modals:
       link:
         title: Mobile SMS Auth
