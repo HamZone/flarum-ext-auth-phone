@@ -58,14 +58,12 @@ return [
     //事件监听
     (new Extend\Event())->listen(Saving::class, SavePhone::class),
 
-    (new Extend\ServiceProvider())->register(Provider::class),
+    //aes 秘钥存储
     (new Extend\Filesystem())
-        ->disk('aes', function (Paths $paths, UrlGenerator $url) {
+        ->disk('flarum-aes', function (Paths $paths, UrlGenerator $url) {
             return [
-                'root'   => "$paths->key",
-                'url'    => ""
-            ];
-    }),
+                'root'   => "$paths->storage/key",
+        ];}),   
 
     //初始化页面状态
     (new Extend\ApiSerializer(UserSerializer::class))

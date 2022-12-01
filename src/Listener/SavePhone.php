@@ -2,11 +2,13 @@
 
 namespace  HamZone\AuthPhone\Listener;
 
+use HamZone\AuthPhone\Common\Aes;
 use Flarum\User\Event\Saving;
 use Illuminate\Support\Arr;
 use Flarum\Foundation\ValidationException;
 use Illuminate\Contracts\Cache\Repository;
 use HamZone\AuthPhone\PhoneHistory;
+use HamZone\AuthPhone\KeyDisk;
 
 class SavePhone
 {
@@ -29,6 +31,8 @@ class SavePhone
             if (!$isSelf) {
                 $actor->assertPermission($canEdit);
             }
+            $disk = resolve(KeyDisk::class);
+            $info = $disk->get();
             if ($attributes['phone']==""){
                 PhoneHistory::insert([
                     "user_id" => $user->id,
@@ -51,7 +55,7 @@ class SavePhone
             }
             $this->cache->delete($user->id."_".$attributes['phone']);
             $this->cache->delete($attributes['phone']."_time");
-            $user->phone = $attributes['phone'];
+            $user->phone = (new Aes($info["key"],$info["iv"]))->Encrypt($attributes['phone']);
             $user->save();
         }
     }
