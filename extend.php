@@ -19,7 +19,7 @@ use Flarum\User\Event\Saving;
 
 use HamZone\AuthPhone\Listener\SavePhone;
 use HamZone\AuthPhone\Middlewares\DiscussionMiddleware;
-use HamZone\AuthPhone\Providers\Provider;
+use HamZone\AuthPhone\Console\BuildKeyCommand;
 
 use Flarum\Foundation\Paths;
 use Flarum\Http\UrlGenerator;
@@ -63,7 +63,10 @@ return [
         ->disk('flarum-aes', function (Paths $paths, UrlGenerator $url) {
             return [
                 'root'   => "$paths->storage/key",
-        ];}),   
+            ];
+    }),
+
+    (new Extend\Console())->command(BuildKeyCommand::class),
 
     //初始化页面状态
     (new Extend\ApiSerializer(UserSerializer::class))

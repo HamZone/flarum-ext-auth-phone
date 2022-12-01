@@ -3,7 +3,6 @@
 namespace HamZone\AuthPhone;
 use Illuminate\Contracts\Filesystem\Factory;
 use Illuminate\Support\Str;
-
 class KeyDisk
 {
     protected $dir;
