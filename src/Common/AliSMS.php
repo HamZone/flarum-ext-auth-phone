@@ -16,6 +16,9 @@ use Illuminate\Contracts\Cache\Repository;
 
 use HamZone\AuthPhone\Common\GenerateCode;
 
+use HamZone\AuthPhone\KeyDisk;
+use HamZone\AuthPhone\Users;
+
 class AliSMS 
 {
     public static function createClient($accessKeyId, $accessKeySecret){
@@ -35,20 +38,24 @@ class AliSMS
             $msg["msg"] = "param is invalid";
             return $msg;
         }
-        
-        app('log')->info( "send phone code uid:".$uid." phone:".$phone);        
-        
+                
+        if(self::phoneExist($phone)){
+            $msg["status"] = false;
+            $msg["msg"] = "phone_exist";
+            return $msg;
+        }
+
         $generate = resolve(GenerateCode::class);
         $settings = app(SettingsRepositoryInterface::class);
         $second = $settings->get('flarum-ext-auth-phone.sms_ali_expire_second');
         list($res, $status) = $generate->generate($uid, $phone, $second);
-        app('log')->info( $res );
+        // app('log')->info( $res );
         if ($status){
             $msg["msg"] = "code_exist";
             $msg["time"] = ceil(($res - time())/60);
             return $msg;
         }
-       
+
         $client = self::createClient(
             $settings->get('flarum-ext-auth-phone.sms_ali_access_id'), 
             $settings->get('flarum-ext-auth-phone.sms_ali_access_sec')
@@ -91,4 +98,16 @@ class AliSMS
             return $msg;
         }
     }
+
+    public static function phoneExist($phone){
+        $disk = resolve(KeyDisk::class);
+        $info = $disk->get();
+        $en_phone = (new Aes($info["key"],$info["iv"]))->Encrypt($phone);
+        $query = Users::select("id","phone")->where(["phone"=>$en_phone])->first();
+        if($query){
+            return true;
+        }
+        return false;
+    }
+
 }

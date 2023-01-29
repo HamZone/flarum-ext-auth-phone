@@ -19,7 +19,7 @@ class GenerateCode
 
         $status = $this->cache->get($uid."_".$phone);
         if($status){
-            app('log')->info( "key exist continue ".$phone." ".$status );
+            // app('log')->info( "key exist continue ".$phone." ".$status );
             return array((int)$this->cache->get($phone."_time"), true);
         }
         if(!$second || $second==0){

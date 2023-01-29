@@ -6,6 +6,7 @@ use HamZone\AuthPhone\Common\Aes;
 use Flarum\User\Event\Saving;
 use Illuminate\Support\Arr;
 use Flarum\Foundation\ValidationException;
+use HamZone\AuthPhone\Common\AliSMS;
 use Illuminate\Contracts\Cache\Repository;
 use HamZone\AuthPhone\PhoneHistory;
 use HamZone\AuthPhone\KeyDisk;
@@ -52,6 +53,9 @@ class SavePhone
             }
             if($code!=$attributes['code']){
                 throw new ValidationException(["msg"=>"code_invalid"]);
+            }
+            if (AliSMS::phoneExist($attributes['phone']) ){
+                throw new ValidationException(["msg"=>"phone_exist"]);
             }
             $this->cache->delete($user->id."_".$attributes['phone']);
             $this->cache->delete($attributes['phone']."_time");

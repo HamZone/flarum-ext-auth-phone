@@ -21,6 +21,7 @@ hamzone-auth-phone:
       code_null: Code required
       code_expired: Code expired
       code_invalid: Code invalid
+      phone_exist: Mobile number has been used
     modals:
       link:
         title: Mobile SMS Auth
