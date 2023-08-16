@@ -1,3 +1,5 @@
+经过线上的一段时间运行，发现会有一定几率的缓存失效问题，导致验证码立即失效，初步排查后是 Flarum 缓存机制存在异常。
+
 # Flarum-ext-auth-phone
 
 A [Flarum](http://flarum.org) extension. auth by phone sms once code
